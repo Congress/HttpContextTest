@@ -1,0 +1,56 @@
+﻿@page "/"
+@using System.Text.Json
+
+@inject SessionService SessionService
+
+<PageTitle>Home</PageTitle>
+
+
+<MudPaper Class="pa-4">
+    <MudForm @ref="form" Model="@vegetable">
+        <MudText Typo="Typo.h5" GutterBottom="true">Vegetable Form</MudText>
+
+        <MudTextField @bind-Value="vegetable.Name" Label="Name" Required="true" />
+        <MudTextField @bind-Value="vegetable.Color" Label="Color" Required="true" />
+        <MudSelect @bind-Value="vegetable.Type" Label="Type" Required="true">
+            <MudSelectItem Value="@("Root")">Root</MudSelectItem>
+            <MudSelectItem Value="@("Leafy")">Leafy</MudSelectItem>
+            <MudSelectItem Value="@("Fruit")">Fruit</MudSelectItem>
+            <MudSelectItem Value="@("Tubers")">Tubers</MudSelectItem>
+        </MudSelect>
+        <MudTextField @bind-Value="vegetable.Weight" Label="Weight (kg)" Required="true" Type="number" />
+        <MudSwitch @bind-Checked="vegetable.IsOrganic" Label="Is Organic?" />
+
+        <MudButton OnClick="HandleSubmit" Color="Color.Primary">Submit</MudButton>
+    </MudForm>
+
+    <MudText Typo="Typo.subtitle1" Class="mt-3">
+        @if (submitted)
+        {
+            <div>
+                <p><strong>Submitted Vegetable:</strong></p>
+                <p>Name: @vegetable.Name</p>
+                <p>Color: @vegetable.Color</p>
+                <p>Type: @vegetable.Type</p>
+                <p>Weight: @vegetable.Weight kg</p>
+                <p>Is Organic: @(vegetable.IsOrganic ? "Yes" : "No")</p>
+            </div>
+        }
+    </MudText>
+</MudPaper>
+
+@code {
+    private MudForm form;
+    private Vegetable vegetable = new Vegetable();
+    private bool submitted = false;
+
+    private void HandleSubmit()
+    {
+        if (form.IsValid)
+        {
+            submitted = true;
+            SessionService.SetVegetable(vegetable);
+        }
+    }
+}
+

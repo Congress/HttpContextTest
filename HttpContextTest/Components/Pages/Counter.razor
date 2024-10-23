@@ -1,0 +1,47 @@
+﻿@page "/counter"
+
+@inject SessionService SessionService
+
+<PageTitle>Counter</PageTitle>
+@if (vegetableFromSession != null)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Color</th>
+                <th>Type</th>
+                <th>Weight (kg)</th>
+                <th>Is Organic</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@vegetableFromSession.Name</td>
+                <td>@vegetableFromSession.Color</td>
+                <td>@vegetableFromSession.Type</td>
+                <td>@vegetableFromSession.Weight</td>
+                <td>@(vegetableFromSession.IsOrganic ? "Yes" : "No")</td>
+            </tr>
+        </tbody>
+    </table>
+    }
+else
+{
+    <p>No vegetable loaded.</p>
+}
+
+
+<MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Pull Vegetable Object</MudButton>
+
+@code {
+    Vegetable vegetableFromSession = new Vegetable();
+    // Vegetable vegetableFromSession = SessionService.GetSessionObject<Vegetable>("VegetableSessionKey");
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        vegetableFromSession = SessionService.GetVegetable();
+
+    }
+}
