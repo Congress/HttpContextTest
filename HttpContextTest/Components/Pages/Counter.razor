@@ -3,7 +3,7 @@
 @inject SessionService SessionService
 
 <PageTitle>Counter</PageTitle>
-@if (vegetableFromSession != null)
+@if (vegetableFromSession!= null)
 {
     <table>
         <thead>
@@ -31,17 +31,57 @@ else
     <p>No vegetable loaded.</p>
 }
 
+@if (vegetableFromSession != null)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Color</th>
+                <th>Type</th>
+                <th>Weight (kg)</th>
+                <th>Is Organic</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@vegetableFromSessionButton.Name</td>
+                <td>@vegetableFromSessionButton.Color</td>
+                <td>@vegetableFromSessionButton.Type</td>
+                <td>@vegetableFromSessionButton.Weight</td>
+                <td>@(vegetableFromSessionButton.IsOrganic ? "Yes" : "No")</td>
+            </tr>
+        </tbody>
+    </table>
+    }
+else
+{
+    <p>No vegetable loaded.</p>
+}
+
+
 
 <MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Pull Vegetable Object</MudButton>
 
-@code {
+@code {
     Vegetable vegetableFromSession = new Vegetable();
+    Vegetable vegetableFromSessionButton = new Vegetable();
     // Vegetable vegetableFromSession = SessionService.GetSessionObject<Vegetable>("VegetableSessionKey");
     private int currentCount = 0;
 
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            vegetableFromSession = SessionService.GetVegetableFromSession();
+        StateHasChanged();
+        }
+
+    }
+
     private void IncrementCount()
     {
-        vegetableFromSession = SessionService.GetVegetableFromSession();
+        vegetableFromSessionButton = SessionService.GetVegetableFromSession();
 
     }
 }
